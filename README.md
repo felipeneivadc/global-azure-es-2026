@@ -63,5 +63,5 @@ O slide deck da palestra está disponível em [`Presentation/Build Multi-Agent W
 ## Recursos
 
 - [Azure AI Foundry – Documentação](https://learn.microsoft.com/azure/ai-foundry/)
-- [Multi-Agent Workflows no Foundry](https://learn.microsoft.com/azure/ai-foundry/agents/)
+- [Multi-Agent Workflows no Foundry](https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/workflow?view=foundry)
 
