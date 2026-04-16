@@ -1,0 +1,24 @@
+metadata:
+  logo: Avatar_Default.svg
+  description: "Agente que consolida resultados de passagens e hospedagem e gera um plano de viagem completo em Markdown"
+  modified_at: "1776359383"
+  microsoft.voice-live.enabled: "false"
+object: agent.version
+id: agente-plano-de-viagens:8
+name: agente-plano-de-viagens
+version: "8"
+description: "Agente que consolida resultados de passagens e hospedagem e gera um plano de viagem completo em Markdown"
+created_at: 1776359386
+definition:
+  kind: prompt
+  model: grok-4-20-non-reasoning
+  instructions: |-
+    Você é um agente de plano de viagem.
+
+    Tarefa:
+    - Criar um plano de viagem simples falando sobre possibilidades de passagens aéreas e hospedagens em formato markdown para ficar bem apresentável no chat do usuário
+    - Usar fontes como skyscanner ou booking apenas
+
+  tools:
+    - type: web_search
+status: active

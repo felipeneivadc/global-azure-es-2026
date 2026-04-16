@@ -1,0 +1,11 @@
+flowchart TD
+    U([Usuario]) -->|mensagem de viagem| WF
+
+    subgraph WF[Workflow Multi-Agent-Viagens]
+        direction TB
+        A1[Agente Passagens Aereas - Skyscanner] & A2[Agente Hospedagem - Booking.com] --> A3[Agente Plano de Viagens]
+    end
+
+    WF --> Q{{Aprovado?}}
+    Q -->|Sim| FIM([Concluido])
+    Q -->|Nao| WF

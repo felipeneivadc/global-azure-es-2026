@@ -1,0 +1,97 @@
+kind: workflow
+trigger:
+  kind: OnConversationStart
+  id: trigger_wf
+  actions:
+    - kind: SetVariable
+      id: Travel-user-input
+      variable: Local.UserInput
+      value: =System.LastMessage.Text
+    - kind: InvokeAzureAgent
+      id: Travel-air-tickets
+      agent:
+        name: agente-passagens-aereas
+      conversationId: =System.ConversationId
+      input:
+        messages: =Local.UserInput
+      output:
+        autoSend: false
+        messages: Local.TravelAirTicketsOutput
+    - kind: InvokeAzureAgent
+      id: Travel-hosting
+      agent:
+        name: agente-hospedagem
+      conversationId: =System.ConversationId
+      input:
+        messages: =Local.UserInput
+      output:
+        autoSend: false
+        messages: Local.TravelHostingOutput
+    - kind: SetVariable
+      id: Travel-Air-Tickets-Hosting-Output
+      variable: Local.TravelAirTicketsHostingOutput
+      value: |-
+        =Concatenate(
+            "### RESULTADO PASSAGENS AÉREAS ###",
+            Last(Local.TravelAirTicketsOutput).Text,
+            "### RESULTADO HOSPEDAGEM ###",
+            Last(Local.TravelHostingOutput).Text
+        )
+    - kind: InvokeAzureAgent
+      id: Travel-plan
+      agent:
+        name: agente-plano-de-viagens
+      conversationId: =System.ConversationId
+      input:
+        messages: =Local.TravelAirTicketsHostingOutput
+      output:
+        autoSend: true
+        messages: Local.TravelPlanOutput
+    - kind: Question
+      variable: Local.ApprovalInput
+      id: question-approve
+      entity: StringPrebuiltEntity
+      skipQuestionMode: SkipOnFirstExecutionIfVariableHasValue
+      prompt: |-
+        ____________________________________________________________________________________________
+        Você aprova o plano de viagem? (Escreva "Sim" para aprovar)
+
+        ______________________________________________
+
+        "
+        {Last(Local.TravelPlanOutput).Text}
+        "
+
+        ____________________________________________
+
+        (Escreva "Sim" para aprovar)
+    - kind: ConditionGroup
+      conditions:
+        - condition: =Lower(Trim(Local.ApprovalInput)) = "sim"
+          actions:
+            - kind: SendActivity
+              activity: Obrigado!
+              id: node-1776350828770
+          id: if-node-true
+      id: if-condition
+      elseActions:
+        - kind: SetVariable
+          id: Travel-user-input-false
+          variable: Local.UserInput
+          value: |-
+            =Concatenate(
+                "### RESULTADO PASSAGENS AÉREAS ###",
+                Last(Local.TravelAirTicketsOutput).Text,
+                "### RESULTADO HOSPEDAGEM ###",
+                Last(Local.TravelHostingOutput).Text,
+                "### RESULTADO PLANO DE VIAGEM ###",
+                Local.TravelAirTicketsHostingOutput,
+                "### RESULTADO APROVAÇÃO ###",
+                Local.ApprovalInput
+            )
+        - kind: GotoAction
+          actionId: Travel-air-tickets
+          id: go-to-start
+id: multi-agent-viagens
+name: Multi-Agent-Viagens
+description: "Workflow multi-agente para planejamento de viagens: busca passagens aéreas e hospedagem em paralelo, gera um plano consolidado e aguarda aprovação do usuário."

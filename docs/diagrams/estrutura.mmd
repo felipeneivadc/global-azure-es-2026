@@ -1,0 +1,11 @@
+graph LR
+    ROOT[global-azure-es-2026]
+    ROOT --> AG[agents/]
+    ROOT --> WF[workflows/]
+    ROOT --> PR[Presentation/]
+    ROOT --> RM[README.md]
+    AG --> AG1[agente-passagens-aereas.yaml]
+    AG --> AG2[agente-hospedagem.yaml]
+    AG --> AG3[agente-plano-viagens.yaml]
+    WF --> WF1[Multi-Agent-Viagens.yaml]
+    PR --> PR1[Build Multi-Agent Workflow Using Microsoft Foundry.pdf]
